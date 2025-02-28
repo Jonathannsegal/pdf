@@ -25,7 +25,7 @@ const ListView: React.FC<ListViewProps> = ({ data, updateData }) => {
       case 'points':
       case 'decision_text':
       case 'step_type':
-        step[field] = value as typeof step.step_type;
+        step[field] = value as string | number | boolean;
         break;
       case 'ui_element':
         if (value === 'checkbox' || value === 'text' || value === 'number' || value === 'select') {
