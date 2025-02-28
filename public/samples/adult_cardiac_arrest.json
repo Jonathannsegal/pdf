@@ -1,0 +1,411 @@
+{
+    "document": {
+      "metadata": {
+        "page_count": 3,
+        "processing_date": "2024-02-27T12:00:00Z",
+        "model_used": "llama3-70b",
+        "original_filename": "cardiac_arrest_protocol.pdf",
+        "settings_version": "1.0",
+        "base64_image": "",
+        "source": "American Red Cross ALS - 2020 VERSION"
+      },
+      "procedures": [
+        {
+          "procedure_name": "Adult Cardiac Arrest Algorithm",
+          "procedure_code": "ACL-001",
+          "procedure_type": "flowchart",
+          "sections": [
+            {
+              "name": "Initial Assessment",
+              "steps": [
+                {
+                  "step_number": 1,
+                  "action": "Check responsiveness",
+                  "points": "Tap and shout, look for signs of normal breathing",
+                  "requirements": ["Patient is unresponsive"],
+                  "warnings": ["Do not delay CPR assessment"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [2]
+                },
+                {
+                  "step_number": 2,
+                  "action": "Activate emergency response system",
+                  "points": "Call for help, get AED/defibrillator, assign team roles",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [3]
+                },
+                {
+                  "step_number": 3,
+                  "action": "Check pulse and breathing",
+                  "points": "Carotid or femoral, 5-10 seconds maximum",
+                  "requirements": [],
+                  "warnings": ["Do not delay CPR if uncertain"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Breathing and pulse?",
+                  "decision_paths": [
+                    {
+                      "condition": "Not breathing (or ineffective ventilation), Pulse present",
+                      "next_steps": [20]
+                    },
+                    {
+                      "condition": "Not breathing (or only gasping breaths), No pulse present",
+                      "next_steps": [4]
+                    },
+                    {
+                      "condition": "Breathing, Pulse present",
+                      "next_steps": [21]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 20,
+                  "action": "Respiratory Arrest/Respiratory Failure",
+                  "points": "Ensure adequate airway, Support oxygenation and ventilation as needed (BVM, noninvasive or invasive)",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "treatment"
+                },
+                {
+                  "step_number": 21,
+                  "action": "Perform primary assessment",
+                  "points": "ABCDE (Airway, Breathing, Circulation, Disability, Exposure) and emergent/initial interventions",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": [
+                    "Refer to applicable condition-specific code cards",
+                    "Position patient as appropriate for clinical condition",
+                    "Perform secondary assessment as patient condition allows",
+                    "Reassess patient",
+                    "Recognize issues",
+                    "Provide care as needed"
+                  ],
+                  "step_type": "treatment"
+                }
+              ]
+            },
+            {
+              "name": "CPR and AED",
+              "steps": [
+                {
+                  "step_number": 4,
+                  "action": "Cardiac Arrest - Begin CPR immediately",
+                  "points": "Follow Adult Cardiac Arrest code card",
+                  "requirements": ["Hard surface", "Proper hand position"],
+                  "warnings": ["Minimize interruptions", "Allow full chest recoil"],
+                  "measurements": ["Depth: 2-2.4 inches (5-6 cm)"],
+                  "ui_element": "checkbox",
+                  "next_steps": [5]
+                },
+                {
+                  "step_number": 5,
+                  "action": "Start CPR and Attach monitor/defibrillator",
+                  "points": "Begin high-quality CPR cycles",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "text",
+                  "timer_label": "CPR Timer",
+                  "timer_duration": 120,
+                  "next_steps": [6]
+                },
+                {
+                  "step_number": 6,
+                  "action": "Analyze rhythm",
+                  "points": "Check for shockable rhythm",
+                  "requirements": [],
+                  "warnings": ["Ensure no one is touching patient during analysis"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Shockable rhythm?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES - VF/pVT",
+                      "next_steps": [7]
+                    },
+                    {
+                      "condition": "NO - Asystole/PEA",
+                      "next_steps": [12]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Shockable Rhythm",
+              "steps": [
+                {
+                  "step_number": 7,
+                  "action": "Shock",
+                  "points": "Deliver defibrillation shock",
+                  "requirements": [],
+                  "warnings": ["Ensure no one is touching patient during defibrillation"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "intervention",
+                  "additional_info": [
+                    "Biphasic: Per manufacturer's recommendations (e.g., 120 to 200 J) or maximum available",
+                    "If dose unknown, use maximum available",
+                    "Monophasic: 360 J for all doses"
+                  ],
+                  "next_steps": [8]
+                },
+                {
+                  "step_number": 8,
+                  "action": "Resume CPR immediately",
+                  "points": "2 min CPR, IV/IO access",
+                  "requirements": [],
+                  "warnings": ["Minimize interruptions to chest compressions"],
+                  "measurements": [],
+                  "ui_element": "text",
+                  "timer_label": "2-min CPR",
+                  "timer_duration": 120,
+                  "next_steps": [9]
+                },
+                {
+                  "step_number": 9,
+                  "action": "Rhythm check",
+                  "points": "Check for shockable rhythm",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Shockable rhythm?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES",
+                      "next_steps": [10]
+                    },
+                    {
+                      "condition": "NO",
+                      "next_steps": [12]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 10,
+                  "action": "Shock and medications",
+                  "points": "Deliver shock, 2 min CPR, Administer epinephrine every 3-5 min",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [11],
+                  "medications": [
+                    {
+                      "name": "Epinephrine",
+                      "dose": "1 mg IV/IO",
+                      "frequency": "every 3 to 5 min"
+                    }
+                  ]
+                },
+                {
+                  "step_number": 11,
+                  "action": "Consider advanced airway",
+                  "points": "Consider advanced airway, capnography",
+                  "requirements": [],
+                  "warnings": ["Minimize interruptions in CPR"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [9]
+                }
+              ]
+            },
+            {
+              "name": "Non-Shockable Rhythm",
+              "steps": [
+                {
+                  "step_number": 12,
+                  "action": "Epinephrine ASAP",
+                  "points": "2 min CPR, IV/IO access, Administer epinephrine every 3-5 min",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Epinephrine",
+                      "dose": "1 mg IV/IO",
+                      "frequency": "every 3 to 5 min"
+                    }
+                  ],
+                  "next_steps": [13]
+                },
+                {
+                  "step_number": 13,
+                  "action": "Rhythm check",
+                  "points": "Check for shockable rhythm",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Shockable rhythm?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES",
+                      "next_steps": [7]
+                    },
+                    {
+                      "condition": "NO",
+                      "next_steps": [14]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 14,
+                  "action": "Check for ROSC",
+                  "points": "Check for signs of return of spontaneous circulation",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "ROSC?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES",
+                      "next_steps": [19]
+                    },
+                    {
+                      "condition": "NO",
+                      "next_steps": [15]
+                    }
+                  ],
+                  "additional_info": [
+                    "What is ROSC?",
+                    "• Pulse and blood pressure",
+                    "• Sudden and sustained increase in ETCO2",
+                    "• Arterial pulse waveform on an a-line",
+                    "• Additional signs: including patient movement, normal breathing or coughing, may be present"
+                  ]
+                },
+                {
+                  "step_number": 15,
+                  "action": "Continue CPR",
+                  "points": "2 min CPR, Treat reversible causes (Hs and Ts)",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "text",
+                  "timer_label": "2-min CPR",
+                  "timer_duration": 120,
+                  "next_steps": [16],
+                  "additional_info": [
+                    "Hs and Ts:",
+                    "• Hypovolemia",
+                    "• Hypoxemia",
+                    "• Hydrogen ion excess (acidosis)",
+                    "• Hypokalemia/hyperkalemia",
+                    "• Hypothermia",
+                    "• Hypo/hyperglycemia",
+                    "• Tension pneumothorax",
+                    "• Tamponade (cardiac)",
+                    "• Thrombosis (pulmonary embolism)",
+                    "• Thrombosis (myocardial infarction)",
+                    "• Toxins"
+                  ]
+                },
+                {
+                  "step_number": 16,
+                  "action": "Rhythm check",
+                  "points": "Check for shockable rhythm",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Shockable rhythm?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES",
+                      "next_steps": [7]
+                    },
+                    {
+                      "condition": "NO",
+                      "next_steps": [17]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 17,
+                  "action": "Check for ROSC",
+                  "points": "Check for signs of return of spontaneous circulation",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "ROSC?",
+                  "decision_paths": [
+                    {
+                      "condition": "YES",
+                      "next_steps": [19]
+                    },
+                    {
+                      "condition": "NO",
+                      "next_steps": [18]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 18,
+                  "action": "Continue resuscitation",
+                  "points": "If no ROSC, continue CPR cycles and consider advanced medications",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Amiodarone",
+                      "dose": "First dose: 300 mg IV/IO bolus",
+                      "frequency": "Second dose: 150 mg after 3 to 5 min"
+                    },
+                    {
+                      "name": "Lidocaine",
+                      "dose": "First dose: 1 to 1.5 mg/kg IV/IO",
+                      "frequency": "Subsequent doses: 0.5 to 0.75 mg/kg IV/IO every 5 to 10 min, up to a max dose of 3 mg/kg"
+                    }
+                  ],
+                  "next_steps": [12]
+                },
+                {
+                  "step_number": 19,
+                  "action": "Post-Cardiac Arrest Care",
+                  "points": "Follow Adult Post-Cardiac Arrest Care code card",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "treatment"
+                }
+              ]
+            }
+          ],
+          "guidelines": {
+            "high_quality_cpr": [
+              "Compression rate 100 to 120 compressions per min and a depth of at least 2 inches (5 cm), allow for full chest recoil",
+              "Minimize interruptions to chest compressions to less than 10 sec",
+              "Avoid excessive ventilations. Each ventilation should last about 1 sec and make the chest begin to rise",
+              "Without advanced airway: 30 compressions, 2 ventilations",
+              "With advanced airway: continuous compressions, deliver 1 ventilation every 6 sec without pausing compressions",
+              "Rotate compressor every 2 min",
+              "Monitor CPR quality with ETCO2 or arterial blood pressure (if available)"
+            ]
+          }
+        }
+      ]
+    }
+  }

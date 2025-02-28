@@ -1,0 +1,532 @@
+{
+    "document": {
+      "metadata": {
+        "page_count": 1,
+        "processing_date": "2024-02-27T16:45:00Z",
+        "model_used": "llama3-70b",
+        "original_filename": "diabetic_ketoacidosis_protocol.pdf",
+        "settings_version": "1.0",
+        "base64_image": ""
+      },
+      "procedures": [
+        {
+          "procedure_name": "Diabetic Ketoacidosis (DKA) Management",
+          "procedure_code": "DKA-101",
+          "procedure_type": "flowchart",
+          "sections": [
+            {
+              "name": "Presentation",
+              "steps": [
+                {
+                  "step_number": 1,
+                  "action": "Obtain clinical history",
+                  "points": "Assess for key symptoms and history",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "assessment",
+                  "additional_info": [
+                    "Clinical History signs:",
+                    "• Polyuria",
+                    "• Polydipsia",
+                    "• Weight loss",
+                    "• Abdominal Pain",
+                    "• Tiredness",
+                    "• Vomiting",
+                    "• Confusion"
+                  ],
+                  "next_steps": [4]
+                },
+                {
+                  "step_number": 2,
+                  "action": "Evaluate clinical signs",
+                  "points": "Assess for key physical findings",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "assessment",
+                  "additional_info": [
+                    "Clinical Signs:",
+                    "• Dehydration",
+                    "• Deep, sighing respirations",
+                    "• Smell of ketones",
+                    "• Lethargy, drowsiness"
+                  ],
+                  "next_steps": [4]
+                },
+                {
+                  "step_number": 3,
+                  "action": "Check biochemistry",
+                  "points": "Evaluate lab values",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "step_type": "assessment",
+                  "additional_info": [
+                    "Biochemistry:",
+                    "• Elevated Blood Glucose (>11mmol/l)",
+                    "• Acidemia (pH <7.3, or bicarbonate <15) on capillary sample",
+                    "• Ketones in urine or blood",
+                    "• U&E",
+                    "• Other investigations as indicated"
+                  ],
+                  "next_steps": [4]
+                },
+                {
+                  "step_number": 4,
+                  "action": "Confirm Diagnosis and Call Consultant",
+                  "points": "Validate diagnosis and seek specialist input",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [5]
+                }
+              ]
+            },
+            {
+              "name": "Severity Assessment",
+              "steps": [
+                {
+                  "step_number": 5,
+                  "action": "Assess Severity",
+                  "points": "Determine severity based on clinical and laboratory findings",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Severity Level",
+                  "decision_paths": [
+                    {
+                      "condition": "MILD (pH <7.3)",
+                      "next_steps": [6]
+                    },
+                    {
+                      "condition": "MODERATE or SEVERE (pH <7.1)",
+                      "next_steps": [10]
+                    },
+                    {
+                      "condition": "SHOCK",
+                      "next_steps": [15]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Mild DKA Management",
+              "steps": [
+                {
+                  "step_number": 6,
+                  "action": "Assess clinical status",
+                  "points": "Clinically well and tolerating fluids",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [7]
+                },
+                {
+                  "step_number": 7,
+                  "action": "No fluid bolus needed",
+                  "points": "Patient can maintain hydration orally",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [8]
+                },
+                {
+                  "step_number": 8,
+                  "action": "Initiate subcutaneous insulin",
+                  "points": "Start subcutaneous insulin therapy",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Insulin",
+                      "route": "Subcutaneous",
+                      "dosing": "As per standard dosing protocol"
+                    }
+                  ],
+                  "next_steps": [9]
+                },
+                {
+                  "step_number": 9,
+                  "action": "Monitor response",
+                  "points": "Evaluate effectiveness of therapy",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Response to therapy",
+                  "decision_paths": [
+                    {
+                      "condition": "NO IMPROVEMENT AFTER 6 HOURS",
+                      "next_steps": [10]
+                    },
+                    {
+                      "condition": "Improvement",
+                      "next_steps": [30]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Moderate/Severe DKA Management",
+              "steps": [
+                {
+                  "step_number": 10,
+                  "action": "Clinical status assessment",
+                  "points": "Dehydrated, clinically acidotic (hyperventilating) or vomiting",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [11]
+                },
+                {
+                  "step_number": 11,
+                  "action": "Initiate fluid management",
+                  "points": "NO FLUID BOLUS, NIL BY MOUTH",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [12, 13, 14]
+                },
+                {
+                  "step_number": 12,
+                  "action": "Calculate fluid requirements",
+                  "points": "Calculate deficit and maintenance fluids",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "number",
+                  "additional_info": ["Correct over 48 hours"]
+                },
+                {
+                  "step_number": 13,
+                  "action": "Administer sodium chloride",
+                  "points": "0.9% sodium chloride IV",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Sodium Chloride",
+                      "concentration": "0.9%",
+                      "route": "IV"
+                    }
+                  ]
+                },
+                {
+                  "step_number": 14,
+                  "action": "Add potassium chloride",
+                  "points": "Add 40mmol/L potassium chloride",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Potassium Chloride",
+                      "dose": "40mmol/L",
+                      "route": "IV"
+                    }
+                  ],
+                  "next_steps": [20]
+                },
+                {
+                  "step_number": 20,
+                  "action": "Add glucose when BGL <17",
+                  "points": "Add 5% glucose when blood glucose level <17",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Glucose",
+                      "concentration": "5%",
+                      "route": "IV",
+                      "indication": "When BGL <17"
+                    }
+                  ],
+                  "next_steps": [21]
+                },
+                {
+                  "step_number": 21,
+                  "action": "Start insulin infusion",
+                  "points": "AFTER first hour of fluids, start Insulin 0.1U/kg/hour by infusion",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Insulin",
+                      "dose": "0.1U/kg/hour",
+                      "route": "Infusion",
+                      "timing": "After first hour of fluids"
+                    }
+                  ],
+                  "next_steps": [22]
+                },
+                {
+                  "step_number": 22,
+                  "action": "Monitor and observe",
+                  "points": "Regular monitoring of vital signs and lab values",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": [
+                    "Observations:",
+                    "• Hourly blood glucose",
+                    "• Hourly neurological status",
+                    "• Hourly vital signs",
+                    "• Hourly fluid balance",
+                    "• 2-4-hourly capillary gas, blood ketones and electrolytes",
+                    "• Monitor ECG for T-wave changes"
+                  ],
+                  "next_steps": [23, 24, 25]
+                },
+                {
+                  "step_number": 23,
+                  "action": "Monitor for acidosis",
+                  "points": "Check for persistent acidosis",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Acidosis Status",
+                  "decision_paths": [
+                    {
+                      "condition": "Persistent acidosis",
+                      "next_steps": [26]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 24,
+                  "action": "Monitor for lack of improvement",
+                  "points": "Check for lack of clinical improvement after 6 hours",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "is_decision_point": true,
+                  "decision_text": "Clinical Improvement",
+                  "decision_paths": [
+                    {
+                      "condition": "No improvement after 6 hours",
+                      "next_steps": [27]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 25,
+                  "action": "Monitor for neurological deterioration",
+                  "points": "Watch for signs of neurological deterioration",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": [
+                    "Warning signs:",
+                    "• Headache",
+                    "• Irritability",
+                    "• Incontinence",
+                    "• Slowing heart rate",
+                    "• Reduced conscious level",
+                    "• Specific neurological signs"
+                  ],
+                  "is_decision_point": true,
+                  "decision_text": "Neurological Status",
+                  "decision_paths": [
+                    {
+                      "condition": "Neurological deterioration",
+                      "next_steps": [29]
+                    }
+                  ]
+                },
+                {
+                  "step_number": 26,
+                  "action": "Manage acidosis",
+                  "points": "For BGL <17mmol/L, add 5% glucose to 0.9% sodium chloride + 40mmol/L potassium chloride",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Glucose",
+                      "concentration": "5%",
+                      "route": "IV",
+                      "addition_to": "0.9% sodium chloride + 40mmol/L potassium chloride"
+                    }
+                  ],
+                  "next_steps": [22]
+                },
+                {
+                  "step_number": 27,
+                  "action": "Re-evaluate treatment",
+                  "points": "Reassess blood ketones, fluid balance, IV therapy",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": [
+                    "Check insulin dose and delivery",
+                    "Consider sepsis",
+                    "May require further resuscitation fluid"
+                  ],
+                  "next_steps": [22]
+                },
+                {
+                  "step_number": 29,
+                  "action": "Manage cerebral edema",
+                  "points": "Exclude hypoglycemia",
+                  "requirements": [],
+                  "warnings": ["Medical emergency requiring immediate intervention"],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [31]
+                },
+                {
+                  "step_number": 30,
+                  "action": "Resolution of DKA",
+                  "points": "Patient showing clinical improvement",
+                  "requirements": ["pH >7.3", "Blood ketones <1.0", "Tolerating food and fluids"],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [32, 33]
+                },
+                {
+                  "step_number": 31,
+                  "action": "Emergency management",
+                  "points": "Call senior staff and initiate treatment",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "medications": [
+                    {
+                      "name": "Sodium Chloride",
+                      "concentration": "3%",
+                      "dose": "5 ml/kg/dose",
+                      "route": "IV",
+                      "alternative": "Mannitol 0.5-1.0g/kg/dose"
+                    }
+                  ],
+                  "additional_info": [
+                    "Restrict IV fluids by 1/2",
+                    "Move to PICU/ICU",
+                    "Cranial imaging when stabilized"
+                  ]
+                },
+                {
+                  "step_number": 32,
+                  "action": "Start subcutaneous insulin",
+                  "points": "Begin subcutaneous insulin at appropriate interval",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox"
+                },
+                {
+                  "step_number": 33,
+                  "action": "Discontinue IV therapy",
+                  "points": "Stop intravenous insulin and fluid after appropriate interval",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox"
+                }
+              ]
+            },
+            {
+              "name": "Shock Management",
+              "steps": [
+                {
+                  "step_number": 15,
+                  "action": "Assess for shock",
+                  "points": "Hypotension, reduced level of consciousness, coma",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [16]
+                },
+                {
+                  "step_number": 16,
+                  "action": "Initiate resuscitation",
+                  "points": "Begin immediate resuscitation",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "next_steps": [17, 18, 19]
+                },
+                {
+                  "step_number": 17,
+                  "action": "Secure airway",
+                  "points": "Ensure patent airway",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": ["Consider NG Tube"]
+                },
+                {
+                  "step_number": 18,
+                  "action": "Support breathing",
+                  "points": "Provide appropriate respiratory support",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": ["Breathing (100% O2)"]
+                },
+                {
+                  "step_number": 19,
+                  "action": "Support circulation",
+                  "points": "Establish vascular access and provide fluid resuscitation",
+                  "requirements": [],
+                  "warnings": [],
+                  "measurements": [],
+                  "ui_element": "checkbox",
+                  "additional_info": [
+                    "Circulation (10ml/kg bolus and call consultant)",
+                    "Consider Inotropes"
+                  ],
+                  "next_steps": [10]
+                }
+              ]
+            }
+          ],
+          "key_points": [
+            "Always use 0.9% sodium chloride as initial IV fluid",
+            "Add 40mmol/L potassium chloride to all rehydration fluids",
+            "Most (>90%) of patients do NOT need fluid boluses",
+            "Glucose can be increased to 7.5% or 10% as needed",
+            "Never bolus insulin IV: use low dose IV infusions",
+            "Start insulin infusion 1-2 hours AFTER starting fluid",
+            "Subcutaneous insulin 1-2 hours BEFORE stopping fluid"
+          ]
+        }
+      ]
+    }
+  }
