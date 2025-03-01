@@ -14,7 +14,6 @@ import {
   Position,
   ReactFlowInstance,
   Connection as ReactFlowConnection,
-  BackgroundVariant,
   Node,
   Edge,
   NodeTypes,
@@ -139,9 +138,9 @@ interface FlowConnection {
   id: string;
   source: string;
   target: string;
-  sourceHandle?: string;
-  targetHandle?: string;
-  label?: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+  label?: string | React.ReactNode;
   labelStyle?: React.CSSProperties;
   labelBgStyle?: React.CSSProperties;
   labelBgPadding?: [number, number];
@@ -479,7 +478,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
     const steps = nodes.map(node => node.data);
     
     // Extract connection data from edges
-    const connections = edges.map(edge => ({
+    const connections: FlowConnection[] = edges.map(edge => ({
       id: edge.id,
       source: edge.source,
       target: edge.target,
@@ -520,15 +519,14 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
             height: 20,
             color: '#333',
           },
-          curvature: 0.4, // Add curvature to reduce edge overlaps
         }, 
         eds
       )
     );
 
     // Update the data model
-    const sourceId = parseInt(params.source ?? '0');
-    const targetId = parseInt(params.target ?? '0');
+    const sourceId = parseInt(params.source ?? '');
+    const targetId = parseInt(params.target ?? '');
     
     if (!isNaN(sourceId) && !isNaN(targetId)) {
       const newData = structuredClone(data);
@@ -693,7 +691,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
             
             <Controls showInteractive={false} />
             <MiniMap zoomable pannable nodeStrokeWidth={3} />
-            <Background variant="dots" gap={15} size={1} color="#aaa" />
+            <Background gap={15} size={1} color="#aaa" />
           </ReactFlow>
         </div>
       </ReactFlowProvider>
