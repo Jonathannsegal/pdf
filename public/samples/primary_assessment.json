@@ -1,0 +1,196 @@
+{
+  "document": {
+    "metadata": {
+      "page_count": 1,
+      "processing_date": "2024-02-28T12:00:00Z",
+      "model_used": "llama3-70b",
+      "original_filename": "adult_systematic_assessment.pdf",
+      "settings_version": "1.0",
+      "source": "American Red Cross ALS - 2020 VERSION"
+    },
+    "procedures": [
+      {
+        "procedure_name": "Adult Systematic Assessment",
+        "procedure_code": "ASA-001",
+        "procedure_type": "flowchart",
+        "sections": [
+          {
+            "name": "Initial Assessment",
+            "steps": [
+              {
+                "step_number": 1,
+                "action": "Perform rapid assessment",
+                "points": "",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "next_steps": [2]
+              },
+              {
+                "step_number": 2,
+                "action": "Assess for life-threatening bleeding",
+                "points": "If at any time the patient has life-threatening bleeding, control the hemorrhage with any available resource (including the use of tourniquet or hemostatic dressing as appropriate).",
+                "requirements": [],
+                "warnings": ["Prioritize bleeding control"],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "next_steps": [3]
+              },
+              {
+                "step_number": 3,
+                "action": "Responsive?",
+                "points": "",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "is_decision_point": true,
+                "decision_text": "Responsive?",
+                "decision_paths": [
+                  {
+                    "condition": "YES",
+                    "next_steps": [10]
+                  },
+                  {
+                    "condition": "NO",
+                    "next_steps": [4]
+                  }
+                ]
+              },
+              {
+                "step_number": 4,
+                "action": "Activate emergency services",
+                "points": "• Activate EMS, rapid response or resuscitation team\n• Check breathing and pulse for no more than 10 sec\n• At the same time, scan the body for life-threatening bleeding",
+                "requirements": [],
+                "warnings": ["Check no more than 10 sec"],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "next_steps": [5]
+              },
+              {
+                "step_number": 5,
+                "action": "Breathing and pulse?",
+                "points": "",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "is_decision_point": true,
+                "decision_text": "Breathing and pulse?",
+                "decision_paths": [
+                  {
+                    "condition": "Not breathing (or ineffective ventilation), Pulse present",
+                    "next_steps": [6]
+                  },
+                  {
+                    "condition": "Not breathing (or only gasping breaths), No pulse present",
+                    "next_steps": [8]
+                  },
+                  {
+                    "condition": "Breathing, Pulse present",
+                    "next_steps": [10]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Respiratory Management",
+            "steps": [
+              {
+                "step_number": 6,
+                "action": "Respiratory Arrest/Respiratory Failure",
+                "points": "",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "text",
+                "next_steps": [7]
+              },
+              {
+                "step_number": 7,
+                "action": "Manage respiratory arrest",
+                "points": "• Ensure adequate airway\n• Support oxygenation and ventilation as needed (BVM, noninvasive or invasive)",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "step_type": "treatment",
+                "next_steps": [10]
+              }
+            ]
+          },
+          {
+            "name": "Cardiac Management",
+            "steps": [
+              {
+                "step_number": 8,
+                "action": "Cardiac Arrest",
+                "points": "",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "text",
+                "next_steps": [9]
+              },
+              {
+                "step_number": 9,
+                "action": "Manage cardiac arrest",
+                "points": "• Begin CPR immediately\n• Follow Adult Cardiac Arrest code card",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "step_type": "treatment",
+                "next_steps": []
+              }
+            ]
+          },
+          {
+            "name": "Primary Assessment",
+            "steps": [
+              {
+                "step_number": 10,
+                "action": "Perform primary assessment",
+                "points": "• Perform primary assessment (Airway, Breathing, Circulation, Disability, Exposure) and emergent/initial interventions\n• Refer to applicable condition-specific code cards\n• Position patient as appropriate for clinical condition\n• Perform secondary assessment as patient condition allows",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "step_type": "assessment",
+                "next_steps": [11]
+              },
+              {
+                "step_number": 11,
+                "action": "Ongoing care",
+                "points": "• Reassess patient\n• Recognize issues\n• Provide care as needed",
+                "requirements": [],
+                "warnings": [],
+                "measurements": [],
+                "ui_element": "checkbox",
+                "step_type": "treatment",
+                "next_steps": [],
+                "additional_info": [
+                  "*As appropriate, follow condition-specific code cards."
+                ]
+              }
+            ]
+          }
+        ],
+        "guidelines": {
+          "footnotes": [
+            "*As appropriate, follow condition-specific code cards."
+          ],
+          "primary_assessment_components": [
+            "Airway",
+            "Breathing",
+            "Circulation",
+            "Disability",
+            "Exposure"
+          ]
+        }
+      }
+    ]
+  }
+}

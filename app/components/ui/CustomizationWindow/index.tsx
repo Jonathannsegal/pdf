@@ -10,7 +10,7 @@ import { ViewToggle } from './common/ViewToggle';
 // Import view components
 import ListView from './ListView';
 import FlatFlowchartView from './FlatFlowchartView';
-import FlowchartEditor from './FlowchartEditor';
+import FlowchartEditorWrapper from './ReactFlowProviderWrapper';
 
 // Enum for view modes
 enum ViewMode {
@@ -105,7 +105,7 @@ const CustomizationWindow: React.FC<CustomizationWindowProps> = ({
                 );
             case ViewMode.VISUAL_FLOWCHART:
                 return (
-                    <FlowchartEditor
+                    <FlowchartEditorWrapper
                         data={editedData}
                         updateData={updateData}
                     />

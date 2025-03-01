@@ -21,19 +21,19 @@ export const SampleFiles: React.FC<SampleFilesProps> = ({
     // Sample files that will be available in the public/samples directory
     const sampleFiles: SampleFile[] = [
         {
-            name: 'Adult Systematic Assessment',
+            name: 'Primary Assessment',
             description: 'Sample adult systematic assessment procedure',
-            filename: 'adult_systematic_assessment.json'
+            filename: 'primary_assessment.json'
         },
         {
-            name: 'Adult Cardiac Arrest',
+            name: 'Cardiac Arrest',
             description: 'Sample adult cardiac arrest procedure',
-            filename: 'adult_cardiac_arrest.json'
+            filename: 'cardiac_arrest.json'
         },
         {
-            name: 'Management of Diabetic Ketoacidosis',
+            name: 'Diabetic Ketoacidosis',
             description: 'Sample management of diabetic ketoacidosis procedure',
-            filename: 'management_of_diabetic_ketoacidosis.json'
+            filename: 'diabetic_ketoacidosis.json'
         }
     ];
 
