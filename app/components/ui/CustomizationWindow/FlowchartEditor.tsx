@@ -18,7 +18,7 @@ import { Maximize, Lock, Unlock, ZoomIn, ZoomOut, RefreshCw } from 'lucide-react
 import type { JsonResult, EnhancedStep } from '@/app/types';
 
 // Define node types with handles
-const DecisionNode = ({ data }) => {
+const DecisionNode = ({ data }: { data: EnhancedStep }) => {
   return (
     <div className="relative">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -49,7 +49,7 @@ const DecisionNode = ({ data }) => {
   );
 };
 
-const ActionNode = ({ data }) => {
+const ActionNode = ({ data }: { data: EnhancedStep }) => {
   return (
     <div className="relative w-56 bg-white border-2 border-gray-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -71,7 +71,7 @@ const ActionNode = ({ data }) => {
   );
 };
 
-const AssessmentNode = ({ data }) => {
+const AssessmentNode = ({ data }: { data: EnhancedStep }) => {
   return (
     <div className="relative w-56 bg-blue-50 border border-blue-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -93,7 +93,7 @@ const AssessmentNode = ({ data }) => {
   );
 };
 
-const TreatmentNode = ({ data }) => {
+const TreatmentNode = ({ data }: { data: EnhancedStep }) => {
   return (
     <div className="relative w-56 bg-green-50 border border-green-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
