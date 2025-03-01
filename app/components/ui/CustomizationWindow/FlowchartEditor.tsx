@@ -12,13 +12,19 @@ import {
   MarkerType,
   Handle,
   Position,
+  ReactFlowInstance,
+  Connection as ReactFlowConnection,
+  BackgroundVariant,
+  Node,
+  Edge,
+  NodeTypes,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Maximize, Lock, Unlock, ZoomIn, ZoomOut, RefreshCw } from 'lucide-react';
 import type { JsonResult, EnhancedStep } from '@/app/types';
 
 // Define node types with handles
-const DecisionNode = ({ data }: { data: EnhancedStep }) => {
+const DecisionNode: React.FC<{ data: EnhancedStep }> = ({ data }) => {
   return (
     <div className="relative">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -49,7 +55,7 @@ const DecisionNode = ({ data }: { data: EnhancedStep }) => {
   );
 };
 
-const ActionNode = ({ data }: { data: EnhancedStep }) => {
+const ActionNode: React.FC<{ data: EnhancedStep }> = ({ data }) => {
   return (
     <div className="relative w-56 bg-white border-2 border-gray-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -71,7 +77,7 @@ const ActionNode = ({ data }: { data: EnhancedStep }) => {
   );
 };
 
-const AssessmentNode = ({ data }: { data: EnhancedStep }) => {
+const AssessmentNode: React.FC<{ data: EnhancedStep }> = ({ data }) => {
   return (
     <div className="relative w-56 bg-blue-50 border border-blue-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -93,7 +99,7 @@ const AssessmentNode = ({ data }: { data: EnhancedStep }) => {
   );
 };
 
-const TreatmentNode = ({ data }: { data: EnhancedStep }) => {
+const TreatmentNode: React.FC<{ data: EnhancedStep }> = ({ data }) => {
   return (
     <div className="relative w-56 bg-green-50 border border-green-200 p-3 rounded-lg shadow-sm">
       <Handle type="target" position={Position.Top} id="target" style={{ background: '#555' }} />
@@ -128,8 +134,22 @@ const TreatmentNode = ({ data }: { data: EnhancedStep }) => {
   );
 };
 
+// Define custom interface for connections in our layout system
+interface FlowConnection {
+  id: string;
+  source: string;
+  target: string;
+  sourceHandle?: string;
+  targetHandle?: string;
+  label?: string;
+  labelStyle?: React.CSSProperties;
+  labelBgStyle?: React.CSSProperties;
+  labelBgPadding?: [number, number];
+  labelBgBorderRadius?: number;
+}
+
 // Define node types
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   decision: DecisionNode,
   action: ActionNode,
   assessment: AssessmentNode,
@@ -143,8 +163,8 @@ interface FlowchartEditorProps {
 
 // The main component
 const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) => {
-  const reactFlowWrapper = useRef(null);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isLocked, setIsLocked] = useState(false);
@@ -153,27 +173,44 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
   const [isLayouting, setIsLayouting] = useState(false);
 
   // Custom automatic layout function
-  const calculateLayout = useCallback((steps, connections) => {
+  interface Step {
+    step_number: number;
+    action: string;
+    points?: string;
+    decision_text?: string;
+    is_decision_point?: boolean;
+    step_type?: string;
+    medications?: { name: string; dose?: string; route?: string }[];
+    next_steps?: number[];
+    decision_paths?: { condition: string; next_steps: number[] }[];
+  }
+
+  interface Position {
+    x: number;
+    y: number;
+  }
+
+  const calculateLayout = useCallback((steps: Step[], connections: FlowConnection[]) => {
     // Create a map of nodes by step number
-    const nodeMap = new Map();
+    const nodeMap = new Map<string, Step>();
     steps.forEach(step => {
       nodeMap.set(step.step_number.toString(), step);
     });
-    
+
     // Identify root nodes (nodes that are not targets of any connection)
-    const targetNodes = new Set();
+    const targetNodes = new Set<string>();
     connections.forEach(conn => {
       targetNodes.add(conn.target);
     });
-    
+
     const rootNodes = steps.filter(step => !targetNodes.has(step.step_number.toString()));
-    
+
     // Create a map of children for each node
-    const childrenMap = new Map();
+    const childrenMap = new Map<string, string[]>();
     steps.forEach(step => {
       childrenMap.set(step.step_number.toString(), []);
     });
-    
+
     connections.forEach(conn => {
       const parentId = conn.source;
       const childId = conn.target;
@@ -183,30 +220,30 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       }
       childrenMap.set(parentId, children);
     });
-    
+
     // Assign levels to nodes using BFS
-    const levelMap = new Map();
+    const levelMap = new Map<string, number>();
     const queue = [...rootNodes.map(node => ({ id: node.step_number.toString(), level: 0 }))];
-    const visited = new Set();
-    
+    const visited = new Set<string>();
+
     while (queue.length > 0) {
-      const { id, level } = queue.shift();
-      
+      const { id, level } = queue.shift()!;
+
       if (visited.has(id)) {
         // If we've seen this node before, use the maximum level
-        levelMap.set(id, Math.max(levelMap.get(id), level));
+        levelMap.set(id, Math.max(levelMap.get(id)!, level));
         continue;
       }
-      
+
       levelMap.set(id, level);
       visited.add(id);
-      
+
       const children = childrenMap.get(id) || [];
       children.forEach(childId => {
         queue.push({ id: childId, level: level + 1 });
       });
     }
-    
+
     // In case there are nodes not visited (disconnected components)
     steps.forEach(step => {
       const id = step.step_number.toString();
@@ -214,27 +251,25 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
         levelMap.set(id, 0);
       }
     });
-    
+
     // Organize nodes by level
-    const nodesByLevel = new Map();
+    const nodesByLevel = new Map<number, string[]>();
     levelMap.forEach((level, id) => {
       if (!nodesByLevel.has(level)) {
         nodesByLevel.set(level, []);
       }
-      nodesByLevel.get(level).push(id);
+      nodesByLevel.get(level)!.push(id);
     });
-    
+
     // Position nodes
-    const nodeWidth = 180;
-    const nodeHeight = 100;
     const horizontalSpacing = 300;
     const verticalSpacing = 200;
-    const positions = new Map();
-    
+    const positions = new Map<string, Position>();
+
     nodesByLevel.forEach((nodeIds, level) => {
       const levelWidth = nodeIds.length * horizontalSpacing;
       const startX = -levelWidth / 2 + horizontalSpacing / 2;
-      
+
       // Sort nodes to get a more consistent layout
       nodeIds.sort((a, b) => {
         // Sort first by decision/normal type for better organization
@@ -245,46 +280,43 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
         }
         return parseInt(a) - parseInt(b); // Then by node number for consistency
       });
-      
+
       // Assign positions with special handling for decision points
       nodeIds.forEach((id, index) => {
         const node = nodeMap.get(id);
-        const isDecision = node?.is_decision_point || false;
         
         // Position calculation
         let x = startX + index * horizontalSpacing;
-        
+
         // Adjust x position based on connections
-        const parents = [];
-        const children = [];
-        
+        const parents: string[] = [];
+
         connections.forEach(conn => {
           if (conn.target === id) parents.push(conn.source);
-          if (conn.source === id) children.push(conn.target);
         });
-        
+
         // If this node has one parent, try to align with it
         if (parents.length === 1) {
           const parentId = parents[0];
           if (positions.has(parentId)) {
-            const parentPos = positions.get(parentId);
+            const parentPos = positions.get(parentId)!;
             // Only influence slightly, don't completely override
             x = (x + parentPos.x) / 2;
           }
         }
-        
+
         // Decision points might need more space
         const y = level * verticalSpacing;
-        
+
         positions.set(id, { x, y });
       });
     });
-    
+
     // Create React Flow nodes
     const flowNodes = steps.map(step => {
       const id = step.step_number.toString();
       let type = 'action';
-      
+
       if (step.is_decision_point) {
         type = 'decision';
       } else if (step.step_type === 'assessment') {
@@ -292,9 +324,9 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       } else if (step.step_type === 'treatment') {
         type = 'treatment';
       }
-      
+
       const pos = positions.get(id) || { x: 0, y: 0 };
-      
+
       return {
         id,
         type,
@@ -303,21 +335,21 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
         sourcePosition: Position.Bottom,
         targetPosition: Position.Top,
         draggable: !isLocked,
-      };
+      } as Node;
     });
-    
+
     // Create React Flow edges with improved connection paths
     const flowEdges = connections.map(conn => {
       const sourceId = conn.source;
       const targetId = conn.target;
-      
+
       // Determine edge style based on connection type
       const isDecisionConnection = nodeMap.get(sourceId)?.is_decision_point || false;
-      
+
       // Get source and target positions
       const sourcePos = positions.get(sourceId);
       const targetPos = positions.get(targetId);
-      
+
       // Calculate curve factor based on horizontal distance
       let curvature = 0.5;
       if (sourcePos && targetPos) {
@@ -326,7 +358,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
           curvature = 0.2 + (dx / 1000); // Increase curvature for distant nodes
         }
       }
-      
+
       return {
         id: conn.id,
         source: sourceId,
@@ -349,9 +381,9 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
         },
         // Add variable curvature factor to reduce edge overlaps
         curvature: isDecisionConnection ? curvature + 0.2 : curvature,
-      };
+      } as Edge;
     });
-    
+
     return { nodes: flowNodes, edges: flowEdges };
   }, [isLocked]);
 
@@ -360,8 +392,8 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
     if (!data?.document?.procedures?.[0]) return;
     
     const procedure = data.document.procedures[0];
-    const allSteps = [];
-    const flowEdges = [];
+    const allSteps: EnhancedStep[] = [];
+    const flowEdges: FlowConnection[] = [];
     
     // Extract all steps from sections
     procedure.sections.forEach(section => {
@@ -380,7 +412,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
           const toId = nextStep.toString();
           
           // Create edge
-          const edge = {
+          const edge: FlowConnection = {
             id: `e${step.step_number}-${nextStep}`,
             source: fromId,
             target: toId,
@@ -403,7 +435,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
                                index === 1 ? 'source-right' : 'source-left';
             
             // Create edge with label
-            const edge = {
+            const edge: FlowConnection = {
               id: `e${step.step_number}-${nextStep}-${index}`,
               source: fromId,
               target: toId,
@@ -436,7 +468,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       }
       setIsLayouting(false);
     }, 50);
-  }, [data, calculateLayout, reactFlowInstance]);
+  }, [data, calculateLayout, reactFlowInstance, setNodes, setEdges]);
 
   const handleLayout = useCallback(() => {
     if (nodes.length === 0) return;
@@ -456,7 +488,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       label: edge.label,
       labelStyle: edge.labelStyle,
       labelBgStyle: edge.labelBgStyle,
-      labelBgPadding: edge.labelBgPadding,
+      labelBgPadding: edge.labelBgPadding as [number, number] | undefined,
       labelBgBorderRadius: edge.labelBgBorderRadius,
     }));
     
@@ -472,9 +504,9 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       }
       setIsLayouting(false);
     }, 50);
-  }, [nodes, edges, calculateLayout, reactFlowInstance]);
+  }, [nodes, edges, calculateLayout, reactFlowInstance, setNodes, setEdges]);
 
-  const onConnect = useCallback((params) => {
+  const onConnect = useCallback((params: ReactFlowConnection) => {
     setEdges((eds) => 
       addEdge(
         { 
@@ -495,8 +527,8 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
     );
 
     // Update the data model
-    const sourceId = parseInt(params.source);
-    const targetId = parseInt(params.target);
+    const sourceId = parseInt(params.source ?? '0');
+    const targetId = parseInt(params.target ?? '0');
     
     if (!isNaN(sourceId) && !isNaN(targetId)) {
       const newData = structuredClone(data);
@@ -536,7 +568,7 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
       if (!document.fullscreenElement) {
         reactFlowWrapper.current.requestFullscreen().then(() => {
           setIsFullscreen(true);
-        }).catch((err) => {
+        }).catch((err: Error) => {
           console.error(`Error attempting to enable fullscreen: ${err.message}`);
         });
       } else {
