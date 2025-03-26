@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ZoomIn, ZoomOut, Maximize, Lock, Unlock, Edit } from 'lucide-react';
-import type { JsonResult, EnhancedStep } from '@/app/types';
+import type { JsonResult } from '@/app/types';
 
 // Define types for the simplified format
 interface NextStep {
@@ -29,6 +29,9 @@ interface EnhancedStep extends Step {
     step_type?: string;
     timer_duration?: number;
     timer_label?: string;
+    step_number: number;
+    ui_element: string;
+    medications?: string[];
 }
 
 // Visual flowchart editor component props
@@ -619,7 +622,9 @@ const FlowchartEditor: React.FC<FlowchartEditorProps> = ({ data, updateData }) =
             const enhancedStep: EnhancedStep = {
                 ...step,
                 // Determine if this is a decision point (has multiple next steps with conditions)
-                is_decision_point: step.next && step.next.length > 1
+                is_decision_point: step.next && step.next.length > 1,
+                step_number: 0,
+                ui_element: ''
             };
     
             // Check if step has a timer
