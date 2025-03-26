@@ -7,6 +7,22 @@ import type { JsonResult } from '@/app/types';
 import PreviewWindow from '../ui/PreviewWindow';
 import CustomizationWindow from '../ui/CustomizationWindow';
 
+// Define the new SimplifiedData interface that PreviewWindow expects
+interface SimplifiedData {
+  procedure: string;
+  procedure_code?: string;
+  steps: Array<{
+    step: number;
+    action: string;
+    points?: string;
+    ui: string[];
+    next: Array<{
+      condition: string;
+      next: number;
+    }>;
+  }>;
+}
+
 interface MainContentProps {
   error: string | null;
   setError: (error: string | null) => void;
@@ -45,6 +61,62 @@ export const MainContent: React.FC<MainContentProps> = ({
   const hasJson = !!jsonFile.data;
   const showBothFiles = hasPdf && hasJson;
 
+  // Transform JsonResult to SimplifiedData
+  const transformToSimplifiedData = (data: JsonResult): SimplifiedData => {
+    // Check if the data is already in the new format
+    if ('steps' in data) {
+      return data as unknown as SimplifiedData;
+    }
+
+    // Otherwise convert from the old format
+    const steps = data.document?.procedures[0]?.sections.flatMap(section => 
+      section.steps.map(step => {
+        // Map step_number to step
+        const newStep = {
+          step: step.step_number,
+          action: step.action,
+          points: step.points,
+          // Convert ui_element to ui array
+          ui: step.ui_element === 'text' && step.timer_duration 
+            ? ['timer', step.timer_label || '', step.timer_duration.toString()]
+            : [step.ui_element || 'checkbox'],
+          // Convert next_steps and decision_paths to next array
+          next: [] as { condition: string, next: number }[]
+        };
+
+        // Add regular next steps
+        if (step.next_steps && step.next_steps.length > 0) {
+          step.next_steps.forEach(nextStep => {
+            newStep.next.push({
+              condition: '',
+              next: nextStep
+            });
+          });
+        }
+
+        // Add decision paths
+        if (step.is_decision_point && step.decision_paths) {
+          step.decision_paths.forEach(path => {
+            path.next_steps.forEach(nextStep => {
+              newStep.next.push({
+                condition: path.condition,
+                next: nextStep
+              });
+            });
+          });
+        }
+
+        return newStep;
+      })
+    ) || [];
+
+    return {
+      procedure: data.document?.procedures[0]?.procedure_name || "Procedure",
+      procedure_code: data.document?.procedures[0]?.procedure_code,
+      steps
+    };
+  };
+
   const handleSaveCustomization = async (data: JsonResult) => {
     try {
       const updatedData: JsonResult = {
@@ -75,10 +147,13 @@ export const MainContent: React.FC<MainContentProps> = ({
       );
     }
 
-    if (currentStep === 3) {
+    if (currentStep === 3 && jsonFile.data) {
+      // Convert JsonResult to SimplifiedData before passing to PreviewWindow
+      const simplifiedData = transformToSimplifiedData(jsonFile.data);
+      
       return (
         <PreviewWindow
-          data={jsonFile.data!}
+          data={simplifiedData}
         />
       );
     }
