@@ -1,0 +1,261 @@
+{
+  "procedure": "ADULT SYSTEMATIC ASSESSMENT",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Start CPR Attach monitor/defibrillator",
+      "ui": [
+        "rhythm checklist",
+        "epi timers"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 2
+        }]
+    },
+    {
+      "step": 2,
+      "action": "Shockable rhythm?",
+      "ui": [
+        "Assign Roles",
+        "Reminder reassess joules of shock",
+        "Reminder to check at end of 2 min if rhythm still shockable"
+      ],
+      "next": [{
+        "condition": "YES",
+        "next": 3
+        },{
+        "condition": "NO",
+        "next": 12
+        }]
+    },
+    {
+      "step": 3,
+      "action": "VF/pVT",
+      "ui": [
+        "Joules",
+        "Reminder to Shock Immediately"
+      ],
+      "next": [{
+        "condition": "Shock",
+        "next": 4
+        }]
+    },
+    {
+      "step": 4,
+      "action": "2 min CPR IV/IO access",
+      "ui": [
+        "Timer for 2 min",
+        "Prepare BVM",
+        "Reminder to obtain access"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 5
+        }]
+    },
+    {
+      "step": 5,
+      "action": "Shockable rhythm?",
+      "ui": [
+        "After 2 sets prompt to change vector of defibrillator",
+        "Reminder reassess joules of shock",
+        "Reminder to check at end of 2 min if rhythm still shockable"
+      ],
+      "next": [{
+        "condition": "YES",
+        "next": 6
+        },{
+        "condition": "NO",
+        "next": 9
+        }]
+    },
+    {
+      "step": 6,
+      "action": "2 min CPR Administer epinephrine every 3 to 5 min Consider advanced airway, capnography",
+      "ui": [
+        "Timer for 2 min",
+        "Airway Checklist",
+        "Cap on BVM",
+        "SGA sizing based on height or weight"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 7
+        }]
+    },
+    {
+      "step": 7,
+      "action": "Shockable rhythm?",
+      "ui": [
+        "Reminder reassess joules of shock",
+        "Reminder to check at end of 2 min if rhythm still shockable"
+      ],
+      "next": [{
+        "condition": "YES",
+        "next": 8
+        },{
+        "condition": "NO",
+        "next": 9
+        }]
+    },
+    {
+      "step": 8,
+      "action": "2 min CPR Administer amiodarone OR lidocaine Treat reversible causes (Hs and Ts)",
+      "ui": [
+        "Timer for 2 min",
+        "Dosage calculation",
+        "Hs and Ts checklist",
+        "Reminder for amiodarone / lidocaine"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 5
+        }]
+    },
+    {
+      "step": 9,
+      "action": "ROSC?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 10
+        },{
+        "condition": "NO",
+        "next": 11
+        }]
+    },
+    {
+      "step": 10,
+      "action": "Go to C or D",
+      "ui": [
+        "Talk to Family"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 13
+        }]
+    },
+    {
+      "step": 11,
+      "action": "Follow Adult Post-Cardiac Arrest Care code card",
+      "ui": [
+        "Post ROSC checklist/ Goals",
+        "Talk to Family"
+      ],
+      "next": [{
+        "condition": "",
+        "next": "DONE"
+        }]
+    },
+    {
+      "step": 12,
+      "action": "Asystole/PEA",
+      "ui": [
+        "PEA vs Pseudo PEA"
+      ],
+      "next": [{
+        "condition": "Epinephrine",
+        "next": 13
+        }]
+    },
+    {
+      "step": 13,
+      "action": "2 min CPR IV/IO access Administer epinephrine every 3 to 5 min Consider advanced airway, capnography",
+      "ui": [
+        "Timer for 2 min",
+        "Needle Size",
+        "Reminder to obtain access"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 14
+        }]
+    },
+    {
+      "step": 14,
+      "action": "Shockable rhythm?",
+      "ui": [
+        "Reminder reassess joules of shock",
+        "Reminder to check at end of 2 min if rhythm still shockable"
+      ],
+      "next": [{
+        "condition": "YES",
+        "next": 19
+        },{
+        "condition": "NO",
+        "next": 15
+        }]
+    },
+    {
+      "step": 15,
+      "action": "ROSC?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 11
+        },{
+        "condition": "NO",
+        "next": 16
+        }]
+    },
+    {
+      "step": 15,
+      "action": "2 min CPR Treat reversible causes (Hs and Ts)",
+      "ui": [
+        "Timer for 2 min",
+        "Hs and Ts checklist"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 16
+        }]
+    },
+    {
+      "step": 16,
+      "action": "Shockable rhythm?",
+      "ui": [
+        "Reminder reassess joules of shock",
+        "Reminder to check at end of 2 min if rhythm still shockable"
+      ],
+      "next": [{
+        "condition": "NO",
+        "next": 17
+        }]
+    },
+    {
+      "step": 17,
+      "action": "ROSC?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 11
+        },{
+        "condition": "NO",
+        "next": 18
+        }]
+    },
+    {
+      "step": 18,
+      "action": "Go to C or D",
+      "ui": [
+        "Talk to Family"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 13
+        }]
+    },
+    {
+      "step": 19,
+      "action": "Go to A or B",
+      "ui": [
+        "Talk to Family"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 6
+        }]
+    }
+  ]
+}

@@ -112,6 +112,7 @@ export const StepProgress: React.FC<StepProgressProps> = ({
                   </>
                 ) : (
                   <>
+                    {step.icon && <span className="mr-1">{step.icon}</span>}
                     <span className="text-sm">{step.label}</span>
                   </>
                 )}

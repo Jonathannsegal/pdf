@@ -1,0 +1,129 @@
+{
+  "procedure": "ADULT SYSTEMATIC ASSESSMENT",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Perform rapid assessment",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 2
+        }]
+    },
+    {
+      "step": 2,
+      "action": "Assess for life-threatening bleeding. If at any time the patient has life-threatening bleeding, control the hemorrhage with any available resource (including the use of tourniquet or hemostatic dressing as appropriate).",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 3
+        }]
+    },
+    {
+      "step": 3,
+      "action": "Responsive?",
+      "ui": [
+        "Medication Given"
+      ],
+      "next": [{
+        "condition": "YES",
+        "next": 4
+        },{
+        "condition": "NO",
+        "next": 9
+        }]
+    },
+    {
+      "step": 4,
+      "action": "Activate EMS, rapid response or resuscitation team, Check breathing and pulse for no more than 10 sec, At the same time, scan the body for life-threatening bleeding",
+      "ui": [
+        "Call for help",
+        "Timer for breathing/pulse",
+        "Reminder to activate response team w/ability to start timer when team activated"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 5
+        }]
+    },
+    {
+      "step": 5,
+      "action": "Breathing and pulse?",
+      "ui": [],
+      "next": [{
+        "condition": "Not breathing (or ineffective ventilation) Pulse present",
+        "next": 6
+        },{
+        "condition": "Not breathing (or only gasping breaths) No pulse present",
+        "next": 8
+        },{
+        "condition": "Breathing Pulse present",
+        "next": 9
+        },{
+        }]
+    },
+    {
+      "step": 6,
+      "action": "Respiratory Arrest Respiratory Failure",
+      "ui": [
+        "Get airway box/kit"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 7
+        }]
+    },
+    {
+      "step": 7,
+      "action": "Ensure adequate airway Support oxygenation and ventilation as needed (BVM, noninvasive or invasive)",
+      "ui": [
+        "Figure out Cause",
+        "Hypoxia",
+        "Mental Status",
+        "Ventilation",
+        "NPA/OPA",
+        "Reminder respiratory rate with BVM"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 9
+        }]
+    },
+    {
+      "step": 8,
+      "action": "Begin CPR immediately Follow Adult Cardiac Arrest code card",
+      "ui": [
+        "Find or call for BVM",
+        "CPR Metronome",
+        "Prep EPI",
+        "Call for help"
+      ],
+      "next": [{
+        "condition": "",
+        "next": "DONE"
+        }]
+    },
+    {
+      "step": 9,
+      "action": "Perform primary assessment (Airway, Breathing, Circulation, Disability, Exposure) and emergent/initial interventions Refer to applicable condition specific code cards, Position patient as appropriate for clinical condition, Perform  secondary assessment as patient condition allows",
+      "ui": [
+        "Life Threatening Bleeding?"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 9
+        }]
+    },
+    {
+      "step": 10,
+      "action": "Reassess patient, Recognize issues, Provide care as needed",
+      "ui": [
+        "Hypothermia/temp management"
+      ],
+      "next": [{
+        "condition": "",
+        "next": 10
+        }]
+    }
+  ]
+}

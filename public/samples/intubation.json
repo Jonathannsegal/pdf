@@ -1,0 +1,221 @@
+{
+  "procedure": "ASA difficult airway algorithm: Adults",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Pre-intubation: Before attempting intubation, choose between either an awake or post-induction airway strategy. Choice of strategy and technique should be made by the clinician managing the airway.",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 2
+        }]
+    },
+    {
+      "step": 2,
+      "action": "Suspected difficult laryngoscopy?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 3
+        },{
+        "condition": "NO",
+        "next": 12
+        }]
+    },
+    {
+      "step": 3,
+      "action": "Suspected difficult ventilation with face mask/supraglottic airway?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 7
+        },{
+        "condition": "NO",
+        "next": 4
+        }]
+    },
+    {
+      "step": 4,
+      "action": "Significant increased risk of aspiration?",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 5
+        }]
+    },
+    {
+      "step": 5,
+      "action": "Increased risk of rapid desaturation?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 7
+        },{
+        "condition": "NO",
+        "next": 6
+        }]
+    },
+    {
+      "step": 6,
+      "action": "Always evaluate for emergency invasive airway Suspected difficult emergency invasive airway?",
+      "ui": [],
+      "next": [{
+        "condition": "YES",
+        "next": 7
+        }, {
+        "condition": "NO",
+        "next": 12
+        }]
+    },
+    {
+      "step": 7,
+      "action": "Proceed with intubation attempt",
+      "ui": [],
+      "next": [{
+        "condition": "OPTIMIZE OXYGENATION THROUGHOUT",
+        "next": 8
+        }]
+    },
+    {
+      "step": 8,
+      "action": "Intubation attempt with patient awake",
+      "ui": [],
+      "next": [{
+        "condition": "Awake intubation",
+        "next": 9
+        },{
+        "condition": "Airway electively secured by invasive access",
+        "next": "DONE"
+        }]
+    },
+    {
+      "step": 9,
+      "action": "Awake intubation",
+      "ui": [],
+      "next": [{
+        "condition": "SUCCESS",
+        "next": "DONE"
+        },{
+        "condition": "FAIL",
+        "next": 10
+        }]
+    },
+    {
+      "step": 10,
+      "action": "Consider other options",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 11
+        }]
+    },
+    {
+      "step": 11,
+      "action": "Postpone the case",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": "DONE"
+        }]
+    },
+    {
+      "step": 12,
+      "action": "Proceed with intubation attempt",
+      "ui": [],
+      "next": [{
+        "condition": "OPTIMIZE OXYGENATION THROUGHOUT",
+        "next": 13
+        }]
+    },
+    {
+      "step": 13,
+      "action": "Intubation attempt after induction of general anesthesia",
+      "ui": [],
+      "next": [{
+        "condition": "Success",
+        "next": "DONE"
+        },{
+        "condition": "FAIL",
+        "next": 14
+        }]
+    },
+    {
+      "step": 14,
+      "action": "LIMIT ATTEMPT Consider calling for help",
+      "ui": [],
+      "next": [{
+        "condition": "Mask ventilation adequate as confirmed by CO2",
+        "next": 16
+        },{
+        "condition": "Mask ventilation not adequate",
+        "next": 15
+        }]
+    },
+    {
+      "step": 15,
+      "action": "Consider/attempt supraglottic airway",
+      "ui": [],
+      "next": [{
+        "condition": "Supraglottic airway ventilation adequate",
+        "next": 16
+        },{
+        "condition": "Supraglottic airway not adequate (cannot intubate, cannot ventilate)",
+        "next": 19
+        }]
+    },
+    {
+      "step": 16,
+      "action": "Non-Emergency Pathway",
+      "ui": [],
+      "next": [{
+        "condition": "",
+        "next": 17
+        }]
+    },
+    {
+      "step": 17,
+      "action": "Ventilation adequate/intubation unsuccessful",
+      "ui": [],
+      "next": [{
+        "condition": "LIMIT ATTEMPTS AND CONSIDER AWAKENING THE PATIENT",
+        "next": 18
+        }]
+    },
+    {
+      "step": 18,
+      "action": "Consider alternative intubation approaches, invasive access, or the feasibility of other options",
+      "ui": [],
+      "next": [{
+        "condition": "SUCCESS",
+        "next": "DONE"
+        },{
+        "condition": "FAIL or deteriorating ventilation",
+        "next": 19
+        }]
+    },
+    {
+      "step": 19,
+      "action": "EMERGENCY PATHWAY LIMIT ATTEMPTS AND BE AWARE OF THE PASSAGE OF TIME CALL FOR HELP/FOR INVASIVE ACCESS",
+      "ui": [],
+      "next": [{
+        "condition": "Emergency invasive airway",
+        "next": "DONE"
+        },{
+        "condition": "Attempt alternative intubation approaches as you prepare for emergency invasive airway",
+        "next": 20
+        }]
+    },
+    {
+      "step": 20,
+      "action": "Attempt alternative intubation approaches as you prepare for emergency invasive airway",
+      "ui": [],
+      "next": [{
+        "condition": "SUCCESS",
+        "next": "DONE"
+        },{
+        "condition": "Emergency invasive airway",
+        "next": "DONE"
+        }]
+    }
+  ]
+}

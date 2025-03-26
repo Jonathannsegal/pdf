@@ -12,34 +12,28 @@ interface BaseCardProps {
     children: ReactNode;
 }
 
+// Updated interfaces to match the new data format
+interface NextStep {
+  condition: string;
+  next: number;
+}
+
 interface Step {
-    action: string;
-    points: string;
-    ui_element: 'checkbox' | 'text' | 'number' | 'select';
-    timer_label?: string;
-    timer_duration?: number;
+  step: number;
+  action: string;
+  points?: string;
+  ui: string[];
+  next: NextStep[];
 }
 
-interface Section {
-    name: string;
-    steps: Step[];
-}
-
-interface Procedure {
-    procedure_name: string;
-    sections: Section[];
-}
-
-interface Document {
-    procedures: Procedure[];
-}
-
-interface PreviewData {
-    document?: Document;
+interface SimplifiedData {
+  procedure: string;
+  procedure_code?: string;
+  steps: Step[];
 }
 
 interface PreviewWindowProps {
-    data: PreviewData;
+  data: SimplifiedData;
 }
 
 const CardHeader: React.FC<BaseCardProps> = ({ children }) => (
@@ -80,7 +74,26 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
     const [isRunning, setIsRunning] = useState(false);
     const [activeTimerStep, setActiveTimerStep] = useState<Step | null>(null);
 
-    const procedure = data?.document?.procedures[0];
+    // Access steps directly from the simplified data structure
+    const allSteps = data?.steps || [];
+    const procedureName = data?.procedure || "Procedure";
+    const totalSteps = allSteps.length;
+
+    // Helper function to check if a step has a timer
+    const isTimer = (step: Step) => {
+      return step.ui && step.ui.length > 2 && step.ui[0] === 'timer';
+    };
+
+    // Helper function to get timer duration and label
+    const getTimerData = (step: Step) => {
+      if (isTimer(step)) {
+        return {
+          label: step.ui[1] || undefined,
+          duration: parseInt(step.ui[2] || '60', 10)
+        };
+      }
+      return { label: undefined, duration: 60 };
+    };
 
     useEffect(() => {
         if (!isRunning || timeLeft === null) return;
@@ -99,31 +112,30 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
         return () => clearInterval(interval);
     }, [isRunning, timeLeft]);
 
-    const allSteps = procedure?.sections.reduce((acc: Step[], section) => {
-        return [...acc, ...section.steps];
-    }, []) || [];
-
-    const totalSteps = allSteps.length;
-
     const handleNext = () => {
         if (currentStepIndex < totalSteps - 1) {
             const nextStep = allSteps[currentStepIndex + 1];
-            if (nextStep.ui_element) {
+            
+            // Handle UI elements based on the first element in the ui array
+            if (nextStep.ui && nextStep.ui.length > 0) {
+                const uiType = nextStep.ui[0];
                 setUiElementStates(prev => ({
                     ...prev,
-                    [nextStep.ui_element]: Math.max(
-                        prev[nextStep.ui_element] || 0,
+                    [uiType]: Math.max(
+                        prev[uiType] || 0,
                         currentStepIndex + 1
                     )
                 }));
 
-                if (nextStep.ui_element === 'text' && !isRunning) {
-                    const duration = nextStep.timer_duration || 60;
+                // Check if this is a timer step
+                if (isTimer(nextStep) && !isRunning) {
+                    const { duration, label } = getTimerData(nextStep);
                     setTimeLeft(duration);
                     setIsRunning(true);
                     setActiveTimerStep(nextStep);
                 }
             }
+            
             setCurrentStepIndex(prev => prev + 1);
         }
     };
@@ -135,7 +147,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
                 Object.entries(newStates).forEach(([element, stepIndex]) => {
                     if (stepIndex >= currentStepIndex - 1) {
                         delete newStates[element];
-                        if (element === 'text') {
+                        if (element === 'timer') {
                             setIsRunning(false);
                             setTimeLeft(null);
                             setActiveTimerStep(null);
@@ -156,7 +168,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
         setActiveTimerStep(null);
     };
 
-    const isUIElementVisible = (type: Step['ui_element']) => {
+    const isUIElementVisible = (type: string) => {
         return type in uiElementStates;
     };
 
@@ -168,7 +180,9 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
         if (prevIndex >= 0) {
             steps.push({ step: allSteps[prevIndex], opacity: 'opacity-50' });
         }
-        steps.push({ step: allSteps[currentStepIndex], opacity: 'opacity-100' });
+        if (currentStepIndex < totalSteps) {
+            steps.push({ step: allSteps[currentStepIndex], opacity: 'opacity-100' });
+        }
         if (nextIndex < totalSteps) {
             steps.push({ step: allSteps[nextIndex], opacity: 'opacity-50' });
         }
@@ -176,10 +190,14 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
         return steps;
     };
 
-    const renderUIElement = (type: Step['ui_element']) => {
-        switch (type) {
-            case 'text':
-                return null;
+    const renderUIElement = (step: Step) => {
+        if (!step.ui || step.ui.length === 0) return null;
+        
+        const uiType = step.ui[0];
+        
+        switch (uiType) {
+            case 'timer':
+                return null; // Timer is rendered separately
             case 'number':
                 return (
                     <input
@@ -202,7 +220,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
 
     const ARView: React.FC = () => {
         const visibleSteps = getVisibleSteps();
-        const showTimer = isUIElementVisible('text') && timeLeft !== null;
+        const showTimer = isUIElementVisible('timer') && timeLeft !== null;
 
         return (
             <div className="relative w-full h-[61vh] bg-gray-100 rounded-lg overflow-hidden">
@@ -218,7 +236,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
                         <div className="bg-white/90 p-3 rounded-lg shadow-lg">
                             <Timer
                                 timeLeft={timeLeft || 0}
-                                label={activeTimerStep?.timer_label}
+                                label={activeTimerStep?.ui[1]} // Get label from ui array
                             />
                         </div>
                     </div>
@@ -233,10 +251,13 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
                                 <div className="bg-white/90 p-3 rounded shadow-lg w-64">
                                     <div className="flex items-center justify-between">
                                         <div className="font-semibold text-gray-900">{step.action}</div>
-                                        {step.ui_element && step.ui_element !== 'text' && (
-                                            <div>{renderUIElement(step.ui_element)}</div>
+                                        {step.ui && step.ui.length > 0 && step.ui[0] !== 'timer' && (
+                                            <div>{renderUIElement(step)}</div>
                                         )}
                                     </div>
+                                    {step.points && (
+                                        <div className="text-sm text-gray-600 mt-1">{step.points}</div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -248,7 +269,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
 
     const MobileView: React.FC = () => {
         const visibleSteps = getVisibleSteps();
-        const showTimer = isUIElementVisible('text') && timeLeft !== null;
+        const showTimer = isUIElementVisible('timer') && timeLeft !== null;
 
         return (
             <div className="w-full h-[61vh] flex items-center justify-center overflow-hidden">
@@ -265,10 +286,13 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
                                     <div className="bg-white rounded-lg shadow-lg p-3 w-64 mx-auto">
                                         <div className="flex items-center justify-between">
                                             <div className="font-medium text-gray-900">{step.action}</div>
-                                            {step.ui_element && step.ui_element !== 'text' && (
-                                                <div>{renderUIElement(step.ui_element)}</div>
+                                            {step.ui && step.ui.length > 0 && step.ui[0] !== 'timer' && (
+                                                <div>{renderUIElement(step)}</div>
                                             )}
                                         </div>
+                                        {step.points && (
+                                            <div className="text-sm text-gray-600 mt-1">{step.points}</div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -278,7 +302,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
                                 <div className="bg-white rounded-lg shadow-lg p-3">
                                     <Timer
                                         timeLeft={timeLeft || 0}
-                                        label={activeTimerStep?.timer_label}
+                                        label={activeTimerStep?.ui[1]} // Get label from ui array
                                     />
                                 </div>
                             </div>
@@ -289,7 +313,7 @@ const PreviewWindow: React.FC<PreviewWindowProps> = ({ data }) => {
         );
     };
 
-    if (!procedure) return null;
+    if (!data || allSteps.length === 0) return null;
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden w-full">
