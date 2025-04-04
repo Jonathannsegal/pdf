@@ -7,7 +7,7 @@ import { Footer } from '@/app/components/layout/Footer';
 import { HistorySidebar } from '@/app/components/ui/HistorySidebar';
 import { useHealth } from '@/app/lib/hooks/useHealth';
 import { useHistory } from '@/app/lib/hooks/useHistory';
-import { processPDF } from '@/app/lib/api/process';
+import { processPDF, processPDFWithPrompt } from '@/app/lib/api/process';
 import { setActiveFile } from '@/app/lib/api/history';
 import { loadSampleFile } from '@/app/lib/api/sample';
 import { handleApiError } from '@/app/lib/utils/error'
@@ -168,6 +168,29 @@ export default function Page() {
     }
   };
 
+  const handleProcessWithPrompt = async (file: File, prompt: string) => {
+    if (!file) {
+      setError('Please select a file first');
+      return;
+    }
+  
+    setIsLoading(true);
+    setError(null);
+  
+    try {
+      const result = await processPDFWithPrompt(file, prompt);
+      setJsonResult(result);
+      await refreshHistory();
+      setCurrentStep(2); // Go directly to customize step
+    } catch (err) {
+      const apiError = handleApiError(err, 'processing PDF with custom prompt');
+      setError(apiError.message);
+      setCurrentStep(1);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSetActive = async () => {
     if (!jsonResult?.filename) {
       setError('No file selected to activate');
@@ -260,6 +283,7 @@ export default function Page() {
         onClosePdf={handleClosePdf}
         onCloseJson={handleCloseJson}
         onSampleSelect={handleSampleSelect}
+        onProcessWithPrompt={handleProcessWithPrompt}
       />
 
       <Footer />

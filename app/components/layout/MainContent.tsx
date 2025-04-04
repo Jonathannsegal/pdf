@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { JsonViewer } from '../ui/JsonViewer';
 import FileUpload from '../ui/FileUpload';
@@ -6,8 +6,10 @@ import SampleFiles from '../ui/SampleFiles';
 import type { JsonResult } from '@/app/types';
 import PreviewWindow from '../ui/PreviewWindow';
 import CustomizationWindow from '../ui/CustomizationWindow';
+import CustomizationPrompt from '../ui/CustomizationPrompt';
+import { processPDFWithPrompt } from '@/app/lib/api/process';
+import { handleApiError } from '@/app/lib/utils/error';
 
-// Define the new SimplifiedData interface that PreviewWindow expects
 interface SimplifiedData {
   procedure: string;
   procedure_code?: string;
@@ -39,6 +41,7 @@ interface MainContentProps {
   onClosePdf: () => void;
   onCloseJson: () => void;
   onSampleSelect: (filename: string) => Promise<void>;
+  onProcessWithPrompt: (file: File, prompt: string) => Promise<void>;
 }
 
 export const MainContent: React.FC<MainContentProps> = ({
@@ -60,6 +63,7 @@ export const MainContent: React.FC<MainContentProps> = ({
   const hasPdf = !!pdfFile.url;
   const hasJson = !!jsonFile.data;
   const showBothFiles = hasPdf && hasJson;
+  const [isProcessingWithPrompt, setIsProcessingWithPrompt] = useState(false);
 
   // Transform JsonResult to SimplifiedData
   const transformToSimplifiedData = (data: JsonResult): SimplifiedData => {
@@ -133,6 +137,22 @@ export const MainContent: React.FC<MainContentProps> = ({
     }
   };
 
+  const handleProcessWithPrompt = async (file: File, prompt: string) => {
+    setIsProcessingWithPrompt(true);
+    setError(null);
+
+    try {
+      const result = await processPDFWithPrompt(file, prompt);
+      setJsonFile({ data: result, file: null });
+      setCurrentStep(2); // Move to customize step after processing
+    } catch (err) {
+      const apiError = handleApiError(err, 'processing PDF with custom prompt');
+      setError(apiError.message);
+    } finally {
+      setIsProcessingWithPrompt(false);
+    }
+  };
+
   const renderContent = () => {
     if (currentStep === 2) {
       return (
@@ -160,45 +180,55 @@ export const MainContent: React.FC<MainContentProps> = ({
 
     if (hasPdf || hasJson) {
       return (
-        <div className={`grid ${showBothFiles ? 'grid-cols-2' : 'grid-cols-1'} gap-6 w-full min-h-[70vh]`}>
-          {hasPdf && (
-            <div className={`flex flex-col w-full ${showBothFiles ? '' : 'col-span-1'}`}>
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden w-full h-full flex flex-col min-h-[500px]">
-                <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center space-x-4">
-                    <span className="text-sm text-gray-700 dark:text-gray-200">PDF Preview</span>
+        <>
+          {hasPdf && pdfFile.file && (
+            <CustomizationPrompt
+              pdfFile={{ file: pdfFile.file }}
+              onProcessWithPrompt={handleProcessWithPrompt}
+              isProcessing={isProcessingWithPrompt}
+              error={error}
+            />
+          )}
+          <div className={`grid ${showBothFiles ? 'grid-cols-2' : 'grid-cols-1'} gap-6 w-full min-h-[70vh]`}>
+            {hasPdf && (
+              <div className={`flex flex-col w-full ${showBothFiles ? '' : 'col-span-1'}`}>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden w-full h-full flex flex-col min-h-[500px]">
+                  <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-700 dark:text-gray-200">PDF Preview</span>
+                    </div>
+                    <button
+                      onClick={onClosePdf}
+                      className="hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded transition-colors text-gray-700 dark:text-gray-200"
+                      title="Close PDF"
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
-                  <button
-                    onClick={onClosePdf}
-                    className="hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded transition-colors text-gray-700 dark:text-gray-200"
-                    title="Close PDF"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-                <div className="flex-1 w-full">
-                  <iframe
-                    src={pdfFile.url!}
-                    className="w-full h-full"
-                    title="PDF Preview"
-                    style={{ minHeight: '100%', minWidth: '100%' }}
-                  />
+                  <div className="flex-1 w-full">
+                    <iframe
+                      src={pdfFile.url!}
+                      className="w-full h-full"
+                      title="PDF Preview"
+                      style={{ minHeight: '100%', minWidth: '100%' }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {hasJson && (
-            <div className={`bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden h-[600px] font-mono w-full ${showBothFiles ? '' : 'col-span-1'}`}>
-              <JsonViewer
-                data={jsonFile.data!}
-                isActive={selectedHistoryItem === activeFile?.filename}
-                onSetActive={onSetActive}
-                onClose={onCloseJson}
-              />
-            </div>
-          )}
-        </div>
+            {hasJson && (
+              <div className={`bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden h-[600px] font-mono w-full ${showBothFiles ? '' : 'col-span-1'}`}>
+                <JsonViewer
+                  data={jsonFile.data!}
+                  isActive={selectedHistoryItem === activeFile?.filename}
+                  onSetActive={onSetActive}
+                  onClose={onCloseJson}
+                />
+              </div>
+            )}
+          </div>
+        </>
       );
     }
 
@@ -208,7 +238,7 @@ export const MainContent: React.FC<MainContentProps> = ({
   return (
     <main className="flex flex-col gap-8 items-center w-full">
       <div className="w-full max-w-6xl flex flex-col gap-6 flex-1">
-        {error && (
+        {error && !hasPdf && (
           <div className="bg-red-50 dark:bg-red-900/30 text-red-500 dark:text-red-200 p-4 rounded-lg text-sm flex justify-between items-center">
             <span>{error}</span>
             <button

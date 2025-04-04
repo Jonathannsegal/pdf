@@ -35,13 +35,13 @@ export const StepProgress: React.FC<StepProgressProps> = ({
       action: onUpload,
       isEnabled: true
     },
-    // {
-    //   id: 'P',
-    //   label: 'Process',
-    //   color: 'blue',
-    //   action: onProcess,
-    //   isEnabled: currentStep >= 1 && !jsonFile?.data && healthStatus?.status === 'ok'
-    // },
+    {
+      id: 'P',
+      label: 'Process',
+      color: 'blue',
+      action: onProcess,
+      isEnabled: currentStep >= 1 && !jsonFile?.data && healthStatus?.status === 'ok'
+    },
     {
       id: 'C',
       label: 'Customize',
@@ -64,13 +64,13 @@ export const StepProgress: React.FC<StepProgressProps> = ({
       },
       isEnabled: currentStep >= 2 && !!jsonFile?.data
     },
-    // {
-    //   id: 'A',
-    //   label: 'Activate',
-    //   color: isActive ? 'green' : 'blue',
-    //   action: onActivate,
-    //   isEnabled: currentStep >= 4 && canActivate && healthStatus?.status === 'ok'
-    // }
+    {
+      id: 'A',
+      label: 'Activate',
+      color: isActive ? 'green' : 'blue',
+      action: onActivate,
+      isEnabled: currentStep >= 4 && canActivate && healthStatus?.status === 'ok'
+    }
   ];
 
   // Determine which step should be visually expanded

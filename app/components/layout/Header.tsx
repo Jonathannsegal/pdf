@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshCw, History } from 'lucide-react';
-// import { StatusIndicator } from '../ui/StatusIndicator';
+import { StatusIndicator } from '../ui/StatusIndicator';
 import { StepProgress } from '../ui/StepProgress';
 import type { HealthStatus, JsonResult } from '@/app/types';
 
@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
 
 
           <div className="flex items-center justify-between mb-6 px-14">
-            {/* <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <h2 className="text-sm font-medium text-white">System Status</h2>
               <button
                 onClick={onOpenHistory}
@@ -58,10 +58,10 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <RefreshCw className={`${isCheckingHealth ? 'animate-spin' : ''}`} size={14} />
               </button>
-            </div> */}
+            </div>
 
             <div className="flex items-center gap-5">
-              {/* <StatusIndicator
+              <StatusIndicator
                 status={healthStatus?.components?.poppler?.status || 'unknown'}
                 message="Poppler"
                 icon={healthStatus?.components?.poppler?.status === 'ok' ? 'check' : 'alert'}
@@ -84,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
                 message="Unity"
                 icon={healthStatus?.components?.unity?.status === "ok" ? 'check' : 'alert'}
                 details={healthStatus?.components?.unity?.message || "Unity connection not configured"}
-              /> */}
+              />
             </div>
           </div>
 
